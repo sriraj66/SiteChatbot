@@ -4,14 +4,6 @@ const msgerInput = get(".msger-input");
 const msgeruuid = get(".msger-uuid");
 const msgerChat = get(".msger-chat");
 
-
-// Icons made by Freepik from www.flaticon.com
-const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
-const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
-const BOT_NAME = "BOT";
-const PERSON_NAME = "YOUR NAME";
-
-
 async function postData(uuid,query) {
   console.log("Posting data...");
   var data = new FormData();

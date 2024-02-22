@@ -6,6 +6,7 @@ from .embed import *
 import threading
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from django.templatetags.static import static
 
 def index(request):
     
@@ -30,10 +31,53 @@ def college_form(request):
             
             start_page_source(mid.id, root_url)
             
-            return redirect('index')  
+            return redirect('source_code',mid.uid)  
     else:
         form = CollegeForm()
     return render(request, 'chatbot/college.html', {'form': form})
+
+def source_code(request,uuid):
+    
+    context = {}
+    clg = College.objects.get(uid=uuid)
+    stylesheet  = request.build_absolute_uri(static('css/style.css'))
+    script1  = request.build_absolute_uri(static('js/service.js'))
+    script2  = request.build_absolute_uri(static('js/script.js'))
+    
+    
+    code = f"""
+  <link rel="stylesheet" href="{stylesheet}">
+  
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <button class="btn-pop-message" onclick="toggleMessage()"><span><i class="fas fa-close"></i></span></button>
+
+  <section class="msger --hide" id="msger">
+    <header class="msger-header">
+      <div class="msger-header-title">
+        <i class="fas fa-comment-alt"></i> {clg.name}
+      </div>
+      <div class="msger-header-options" onclick="toggleMessage()">
+        <span><i class="fas fa-times"></i></span>
+      </div>
+    </header>
+
+    <main class="msger-chat">
+
+    </main>
+
+    <form class="msger-inputarea">
+      <input type="text" name='query' class="msger-input" placeholder="Enter your message...">
+      <input type="text" name='uuid' value='{uuid}' hidden class="msger-uuid"">
+
+  <button type=" submit" class="msger-send-btn">Send</button>
+    </form>
+  </section>
+  <script src="{script1}"></script>
+  <script src="{script2}"></script>
+  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+    """
+    context['code'] = code
+    return render(request,'chatbot/source_code.html',context)
 
 @csrf_exempt
 @api_view(['POST'])

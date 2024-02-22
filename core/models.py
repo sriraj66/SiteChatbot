@@ -41,7 +41,7 @@ class College(models.Model):
 
 class Sub_urls(models.Model):
     to = models.ForeignKey(College, on_delete=models.DO_NOTHING,related_name='Individual_colleges')
-    url = models.URLField(verbose_name="sub_url",unique=True)
+    url = models.URLField(verbose_name="sub_url")
     
     
     created = models.DateTimeField(auto_now_add=True)

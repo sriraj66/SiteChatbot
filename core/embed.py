@@ -69,8 +69,11 @@ class Emmbedded(threading.Thread):
         for i in urls:
             try:
                 self.app.add(i.url)
+                print(i.url)
             except Exception as e:
                 print(e)
+        
+        self.app.add(self.clg.hints)
         
         self.clg.state = True
         self.clg.save()

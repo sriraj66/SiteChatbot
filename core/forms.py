@@ -8,4 +8,4 @@ class CollegeForm(forms.ModelForm):
     
     class Meta:
         model = College
-        fields = ['name','desc','logo','root_url','hints']
+        fields = ['name','api_key','desc','logo','root_url','hints']

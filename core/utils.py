@@ -3,7 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-
+from .embed import Emmbedded
 import threading
 from .models import *
 
@@ -52,7 +52,9 @@ def extract_page_urls(site_url):
 def callback_function(id):
     obj = College.objects.get(id=id)
     obj.running = True
-    print("Call back")
+    print("Embeding")
+    emb = Emmbedded(uid=obj.uid,prompt="SETUP")
+    emb.query()
     obj.save()
 
  

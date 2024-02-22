@@ -1,8 +1,8 @@
 from embedchain import App
 import threading
+from .constants import *
 
 id = '3bb915ee-dfa9-46fb-8a1c-4142fccf2194'
-key = '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'
 
 config = {
     'app': {
