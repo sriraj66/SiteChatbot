@@ -9,7 +9,9 @@ local_settings.py
 
 # Ignore SQLite database file
 db.sqlite3
-
+sqlite.db
+sqlite.db
+constants.py
 # Ignore IDE or editor specific files
 .vscode/
 .idea/
