@@ -49,35 +49,45 @@ def extract_page_urls(site_url):
         print(f"Failed to retrieve content from {site_url}. Status code: {response.status_code}")
         return set(), set(), set(), set()
 
-def callback_function(id):
+def callback_function(id,urls):
     obj = College.objects.get(id=id)
     obj.running = True
-    print("Embeding")
-    emb = Emmbedded(uid=obj.uid,prompt="SETUP")
-    emb.query()
+    print("Embeding urls to the models")
+    emb = Emmbedded(uid=obj.uid,prompt="SETUP",urls=urls)
+    emb.add_sources()
     obj.save()
 
  
 
 def add_source(id,site_url):
-    page_urls, pdf_urls, png_urls, html_php_urls = extract_page_urls(site_url)
-    urls = page_urls.union(html_php_urls)
-    obj = College.objects.get(id=id)
-    print("Source URL")
-    for i in urls:
-        print(i)
-        su = Sub_urls(
-            to=obj,
-            url=i
-        )
-        su.save()
-        obj.sub_urls.add(su)
-    obj.save()
-    callback_function(id)
-    
+    try:
+        obj = College.objects.get(id=id)
+        urls = set()
+        for i in site_url:    
+            page_urls, pdf_urls, png_urls, html_php_urls = extract_page_urls(i)
+            page_urls = page_urls.union(html_php_urls)
+            print("Source URL from : ",i)
+            for j in page_urls:
+                print("Added : ",j)
+                urls.add(j)
+                
+        callback_function(id,urls)
+    except Exception as e:
+        print(e)
+            
+def separate_urls(input_string):
+    urls = [url.strip() for url in input_string.split('\r\n') if url.strip()]
+    return urls
 
-def start_page_source(id,url):
-    t = threading.Thread(target=add_source, args=(id,url))
+def start_page_source(id):
+    clg = College.objects.get(id=id)
+    urls = set()
+    urls.add(clg.root_url)
+    sub_urls = separate_urls(clg.aditional_urls)
+    for i in sub_urls:
+        urls.add(i)
+    
+    t = threading.Thread(target=add_source, args=(id,urls))
     
     t.start()
 

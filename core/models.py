@@ -4,18 +4,18 @@ import uuid
 
 class College(models.Model):
     
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING,null=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     uid = models.UUIDField(default=uuid.uuid4,editable=False)
     
     name = models.CharField(max_length=255,)
     desc = models.TextField(verbose_name="Description")
-
+    
     logo = models.URLField(verbose_name="Logo URL",default="https://images.vexels.com/media/users/3/155806/isolated/preview/b29d14472d5272374a754e05554f03ae-hexagon-icon.png")
 
     api_key = models.CharField(max_length=255,blank=True)
 
     root_url = models.URLField(verbose_name="Source URL")
-    sub_urls = models.ManyToManyField('Sub_urls',blank=True)
+    aditional_urls = models.TextField(blank = True,)
     state = models.BooleanField(default=False)
     
     running = models.BooleanField(default=False)
@@ -35,26 +35,10 @@ class College(models.Model):
         ordering = ['-created', '-updated']
     def count_messages(self):
         return len(self.messages)
-    def count_urls(self):
-        return len(self.sub_urls)
 
-
-class Sub_urls(models.Model):
-    to = models.ForeignKey(College, on_delete=models.DO_NOTHING,related_name='Individual_colleges')
-    url = models.URLField(verbose_name="sub_url")
-    
-    
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        ordering = ['-created', '-updated']
-    
-    def __str__(self) -> str:
-        return f"{self.to.name} - {str(self.id)}"
 
 class Messages(models.Model):
-    to = models.ForeignKey(College,on_delete=models.DO_NOTHING, related_name='messages_of_college')
+    to = models.ForeignKey(College,on_delete=models.CASCADE, related_name='messages_of_college')
     
     request = models.CharField(max_length=255)
     responce = models.CharField(max_length=255)

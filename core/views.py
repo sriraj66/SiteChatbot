@@ -29,7 +29,7 @@ def college_form(request):
             mid = form.save()
             root_url = form.cleaned_data['root_url']
             
-            start_page_source(mid.id, root_url)
+            start_page_source(mid.id)
             
             return redirect('source_code',mid.uid)  
     else:
